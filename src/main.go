@@ -1,5 +1,17 @@
 package main
 
+func p_and_n(play_tennis []bool) (p, n float64, t int) {
+	t = len(play_tennis)
+	for _, v := range play_tennis {
+		if v {
+			p++
+		} else {
+			n++
+		}
+	}
+	return p, n, t
+}
+
 func main() {
 
 	sky := []string{"Soleado", "Soleado", "Lluvioso", "Lluvioso", "Lluvioso", "Lluvioso", "Lluvioso", "Soleado", "Soleado", "Lluvioso", "Soleado", "Lluvioso", "Lluvioso", "Lluvioso"}
