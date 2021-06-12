@@ -1,5 +1,9 @@
 package main
 
+import (
+	"math"
+)
+
 func p_and_n(play_tennis []bool) (p, n float64, t int) {
 	t = len(play_tennis)
 	for _, v := range play_tennis {
@@ -10,6 +14,14 @@ func p_and_n(play_tennis []bool) (p, n float64, t int) {
 		}
 	}
 	return p, n, t
+}
+
+func entropy(p, n float64, t int) (s float64) {
+	t_S := float64(t)
+	p = -(p / t_S) * (math.Log2(p / t_S))
+	n = -(n / t_S) * (math.Log2(n / t_S))
+	s = p + n
+	return s
 }
 
 func main() {
