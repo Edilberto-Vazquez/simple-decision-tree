@@ -17,17 +17,10 @@ func p_and_n(play_tennis []bool) (p, n float64, t int) {
 	return p, n, t
 }
 
-func entropy(p, n float64, t int) (s float64) {
-	t_S := float64(t)
-	p = -(p / t_S) * (math.Log2(p / t_S))
-	n = -(n / t_S) * (math.Log2(n / t_S))
-	s = p + n
-	return s
-}
-
-func data_Sv(field, values []string, attr_main []bool) (ps_ns [][]int) {
-	p := 0
-	n := 0
+func data_Sv(field, values []string, attr_main []bool) (ps_ns [][]float64) {
+	p := 0.0
+	n := 0.0
+	t := 0.0
 	for _, v1 := range values {
 		for i, v2 := range field {
 			if v1 == v2 && attr_main[i] {
@@ -36,12 +29,27 @@ func data_Sv(field, values []string, attr_main []bool) (ps_ns [][]int) {
 				n++
 			}
 		}
-		ps_ns = append(ps_ns, []int{p, n})
-		p = 0
-		n = 0
+		t = p + n
+		ps_ns = append(ps_ns, []float64{p, n, t})
+		p, n = 0, 0
 	}
 	return ps_ns
 
+}
+
+func entropy(p, n float64, t int) (s float64) {
+	t_S := float64(t)
+	p = -(p / t_S) * (math.Log2(p / t_S))
+	n = -(n / t_S) * (math.Log2(n / t_S))
+	s = p + n
+	return s
+}
+
+func information_gain(entropy_s float64, t int, sv [][]float64) float64 {
+	for _, v := range sv {
+		entropy_s -= ((v[0] + v[1]) / float64(t)) * entropy(v[0], v[1], int(v[2]))
+	}
+	return entropy_s
 }
 
 func main() {
@@ -64,6 +72,9 @@ func main() {
 
 	entropy_s := entropy(p, n, t)
 
-	fmt.Println(entropy_s)
-	fmt.Println(data_Sv(wind, wind_values, play_tennis))
+	sv := data_Sv(wind, wind_values, play_tennis)
+
+	a := information_gain(entropy_s, t, sv)
+
+	fmt.Println(a)
 }
